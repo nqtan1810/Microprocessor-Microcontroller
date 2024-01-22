@@ -1,0 +1,345 @@
+<html>
+<head>
+       <title>source code: main_cach2.asm</title>
+       <meta name="description" content="source code">
+       <style>
+           a:link {text-decoration: none}
+           a:visited {text-decoration: none}
+           a:hover {text-decoration: none; color:#ff0000}
+       </style>
+</head>
+<body leftmargin=110  rightmargin=110 topmargin=20 bgcolor=#FFFFFF text=#000000 link=blue vlink=blue alink=blue>
+ 
+ 
+<!-- * -->
+ 
+ 
+
+
+
+
+&nbsp; &nbsp;<center> <font color=#FFFFFF> ;</font> <font size=2 face="Terminal"> main_cach2.asm </font></center>
+
+
+
+
+
+
+<!-- START AUTOMATIC ASM TO HTML EXPORT -->
+<pre><font size=2 face="Terminal">
+.MODEL SMALL 
+.STACK 100h 
+.DATA 
+ 
+<font color=#008000>;=======================PHAN KHAI BAO CAC CHUOI=============================== </font>
+ 
+    MSG1 <font color=#000064>DB</font> 10,13, <font color=#800080>"NHAP SO A: $"</font>            
+    MSG2 <font color=#000064>DB</font> 10,13, <font color=#800080>"NHAP SO B: $"</font> 
+    MSG3 <font color=#000064>DB</font> 10,13, <font color=#800080>"A + B = $"</font>  
+    MSG4 <font color=#000064>DB</font> 10,13,10,13, <font color=#800080>"******FIBONACCI NUMBERS******$"</font> 
+ 
+<font color=#008000>;========================PHAN KHAI BAO CAC BIEN===============================  </font>
+    
+    NUM1 <font color=#000064>DB</font> ?               <font color=#008000>; LUU SO THU NHAT </font>
+    NUM2 <font color=#000064>DB</font> ?               <font color=#008000>; LUU SO THU HAI </font>
+    RESULT <font color=#000064>DB</font> ?             <font color=#008000>; LUU KET QUA SUM </font>
+     
+    X <font color=#000064>DB</font> ?                  <font color=#008000>; CAC BIEN TAM THOI TRONG QUA TRINH TINH TOAN </font>
+    Y <font color=#000064>DB</font> ? 
+     
+    <font color=#008000>; LUU SO FIBONACCI THU i </font>
+    fibo1  <font color=#000064>DB</font> 10, 13, <font color=#800080>"0$"</font> 
+    fibo2  <font color=#000064>DB</font> 10, 13, <font color=#800080>"1$"</font> 
+    fibo3  <font color=#000064>DB</font> 10, 13, <font color=#800080>"1$"</font> 
+    fibo4  <font color=#000064>DB</font> 10, 13, <font color=#800080>"2$"</font> 
+    fibo5  <font color=#000064>DB</font> 10, 13, <font color=#800080>"3$"</font> 
+    fibo6  <font color=#000064>DB</font> 10, 13, <font color=#800080>"5$"</font> 
+    fibo7  <font color=#000064>DB</font> 10, 13, <font color=#800080>"8$"</font> 
+    fibo8  <font color=#000064>DB</font> 10, 13, <font color=#800080>"13$"</font> 
+    fibo9  <font color=#000064>DB</font> 10, 13, <font color=#800080>"21$"</font> 
+    fibo10 <font color=#000064>DB</font> 10, 13, <font color=#800080>"34$"</font> 
+    fibo11 <font color=#000064>DB</font> 10, 13, <font color=#800080>"55$"</font> 
+    fibo12 <font color=#000064>DB</font> 10, 13, <font color=#800080>"89$"</font> 
+    fibo13 <font color=#000064>DB</font> 10, 13, <font color=#800080>"144$"</font> 
+    fibo14 <font color=#000064>DB</font> 10, 13, <font color=#800080>"233$"</font> 
+    fibo15 <font color=#000064>DB</font> 10, 13, <font color=#800080>"377$"</font> 
+    fibo16 <font color=#000064>DB</font> 10, 13, <font color=#800080>"610$"</font> 
+    fibo17 <font color=#000064>DB</font> 10, 13, <font color=#800080>"987$"</font> 
+    fibo18 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1597$"</font> 
+    fibo19 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2584$"</font> 
+    fibo20 <font color=#000064>DB</font> 10, 13, <font color=#800080>"4181$"</font> 
+    fibo21 <font color=#000064>DB</font> 10, 13, <font color=#800080>"6765$"</font> 
+    fibo22 <font color=#000064>DB</font> 10, 13, <font color=#800080>"10946$"</font> 
+    fibo23 <font color=#000064>DB</font> 10, 13, <font color=#800080>"17711$"</font> 
+    fibo24 <font color=#000064>DB</font> 10, 13, <font color=#800080>"28657$"</font> 
+    fibo25 <font color=#000064>DB</font> 10, 13, <font color=#800080>"46368$"</font> 
+    fibo26 <font color=#000064>DB</font> 10, 13, <font color=#800080>"75025$"</font> 
+    fibo27 <font color=#000064>DB</font> 10, 13, <font color=#800080>"121393$"</font> 
+    fibo28 <font color=#000064>DB</font> 10, 13, <font color=#800080>"196418$"</font> 
+    fibo29 <font color=#000064>DB</font> 10, 13, <font color=#800080>"317811$"</font> 
+    fibo30 <font color=#000064>DB</font> 10, 13, <font color=#800080>"514229$"</font> 
+    fibo31 <font color=#000064>DB</font> 10, 13, <font color=#800080>"832040$"</font> 
+    fibo32 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1346269$"</font> 
+    fibo33 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2178309$"</font> 
+    fibo34 <font color=#000064>DB</font> 10, 13, <font color=#800080>"3524578$"</font> 
+    fibo35 <font color=#000064>DB</font> 10, 13, <font color=#800080>"5702887$"</font> 
+    fibo36 <font color=#000064>DB</font> 10, 13, <font color=#800080>"9227465$"</font> 
+    fibo37 <font color=#000064>DB</font> 10, 13, <font color=#800080>"14930352$"</font> 
+    fibo38 <font color=#000064>DB</font> 10, 13, <font color=#800080>"24157817$"</font> 
+    fibo39 <font color=#000064>DB</font> 10, 13, <font color=#800080>"39088169$"</font> 
+    fibo40 <font color=#000064>DB</font> 10, 13, <font color=#800080>"63245986$"</font> 
+    fibo41 <font color=#000064>DB</font> 10, 13, <font color=#800080>"102334155$"</font> 
+    fibo42 <font color=#000064>DB</font> 10, 13, <font color=#800080>"165580141$"</font> 
+    fibo43 <font color=#000064>DB</font> 10, 13, <font color=#800080>"267914296$"</font> 
+    fibo44 <font color=#000064>DB</font> 10, 13, <font color=#800080>"433494437$"</font> 
+    fibo45 <font color=#000064>DB</font> 10, 13, <font color=#800080>"701408733$"</font> 
+    fibo46 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1134903170$"</font> 
+    fibo47 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1836311903$"</font> 
+    fibo48 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2971215073$"</font> 
+    fibo49 <font color=#000064>DB</font> 10, 13, <font color=#800080>"4807526976$"</font> 
+    fibo50 <font color=#000064>DB</font> 10, 13, <font color=#800080>"7778742049$"</font> 
+    fibo51 <font color=#000064>DB</font> 10, 13, <font color=#800080>"12586269025$"</font> 
+    fibo52 <font color=#000064>DB</font> 10, 13, <font color=#800080>"20365011074$"</font> 
+    fibo53 <font color=#000064>DB</font> 10, 13, <font color=#800080>"32951280099$"</font> 
+    fibo54 <font color=#000064>DB</font> 10, 13, <font color=#800080>"53316291173$"</font> 
+    fibo55 <font color=#000064>DB</font> 10, 13, <font color=#800080>"86267571272$"</font> 
+    fibo56 <font color=#000064>DB</font> 10, 13, <font color=#800080>"139583862445$"</font> 
+    fibo57 <font color=#000064>DB</font> 10, 13, <font color=#800080>"225851433717$"</font> 
+    fibo58 <font color=#000064>DB</font> 10, 13, <font color=#800080>"365435296162$"</font> 
+    fibo59 <font color=#000064>DB</font> 10, 13, <font color=#800080>"591286729879$"</font> 
+    fibo60 <font color=#000064>DB</font> 10, 13, <font color=#800080>"956722026041$"</font> 
+    fibo61 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1548008755920$"</font> 
+    fibo62 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2504730781961$"</font> 
+    fibo63 <font color=#000064>DB</font> 10, 13, <font color=#800080>"4052739537881$"</font> 
+    fibo64 <font color=#000064>DB</font> 10, 13, <font color=#800080>"6557470319842$"</font> 
+    fibo65 <font color=#000064>DB</font> 10, 13, <font color=#800080>"10610209857723$"</font> 
+    fibo66 <font color=#000064>DB</font> 10, 13, <font color=#800080>"17167680177565$"</font> 
+    fibo67 <font color=#000064>DB</font> 10, 13, <font color=#800080>"27777890035288$"</font> 
+    fibo68 <font color=#000064>DB</font> 10, 13, <font color=#800080>"44945570212853$"</font> 
+    fibo69 <font color=#000064>DB</font> 10, 13, <font color=#800080>"72723460248141$"</font> 
+    fibo70 <font color=#000064>DB</font> 10, 13, <font color=#800080>"117669030460994$"</font> 
+    fibo71 <font color=#000064>DB</font> 10, 13, <font color=#800080>"190392490709135$"</font> 
+    fibo72 <font color=#000064>DB</font> 10, 13, <font color=#800080>"308061521170129$"</font> 
+    fibo73 <font color=#000064>DB</font> 10, 13, <font color=#800080>"498454011879264$"</font> 
+    fibo74 <font color=#000064>DB</font> 10, 13, <font color=#800080>"806515533049393$"</font> 
+    fibo75 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1304969544928657$"</font> 
+    fibo76 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2111485077978050$"</font> 
+    fibo77 <font color=#000064>DB</font> 10, 13, <font color=#800080>"3416454622906707$"</font> 
+    fibo78 <font color=#000064>DB</font> 10, 13, <font color=#800080>"5527939700884757$"</font> 
+    fibo79 <font color=#000064>DB</font> 10, 13, <font color=#800080>"8944394323791464$"</font> 
+    fibo80 <font color=#000064>DB</font> 10, 13, <font color=#800080>"14472334024676221$"</font> 
+    fibo81 <font color=#000064>DB</font> 10, 13, <font color=#800080>"23416728348467685$"</font> 
+    fibo82 <font color=#000064>DB</font> 10, 13, <font color=#800080>"37889062373143906$"</font> 
+    fibo83 <font color=#000064>DB</font> 10, 13, <font color=#800080>"61305790721611591$"</font> 
+    fibo84 <font color=#000064>DB</font> 10, 13, <font color=#800080>"99194853094755497$"</font> 
+    fibo85 <font color=#000064>DB</font> 10, 13, <font color=#800080>"160500643816367088$"</font> 
+    fibo86 <font color=#000064>DB</font> 10, 13, <font color=#800080>"259695496911122585$"</font> 
+    fibo87 <font color=#000064>DB</font> 10, 13, <font color=#800080>"420196140727489673$"</font> 
+    fibo88 <font color=#000064>DB</font> 10, 13, <font color=#800080>"679891637638612258$"</font> 
+    fibo89 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1100087778366101931$"</font> 
+    fibo90 <font color=#000064>DB</font> 10, 13, <font color=#800080>"1779979416004714189$"</font> 
+    fibo91 <font color=#000064>DB</font> 10, 13, <font color=#800080>"2880067194370816120$"</font> 
+    fibo92 <font color=#000064>DB</font> 10, 13, <font color=#800080>"4660046610375530309$"</font> 
+    fibo93 <font color=#000064>DB</font> 10, 13, <font color=#800080>"7540113804746346429$"</font> 
+    fibo94 <font color=#000064>DB</font> 10, 13, <font color=#800080>"12200160415121876738$"</font> 
+    fibo95 <font color=#000064>DB</font> 10, 13, <font color=#800080>"19740274219868223167$"</font> 
+    fibo96 <font color=#000064>DB</font> 10, 13, <font color=#800080>"31940434634990099905$"</font> 
+    fibo97 <font color=#000064>DB</font> 10, 13, <font color=#800080>"51680708854858323072$"</font> 
+    fibo98 <font color=#000064>DB</font> 10, 13, <font color=#800080>"83621143489848422977$"</font> 
+    fibo99 <font color=#000064>DB</font> 10, 13, <font color=#800080>"135301852344706746049$"</font> 
+     
+    <font color=#008000>; LUU 99 SO FIBONACCI </font>
+    FIBO <font color=#000064>DW</font> fibo1, fibo2, fibo3, fibo4, fibo5, fibo6, fibo7, fibo8, fibo9, fibo10, fibo11, fibo12, fibo13, fibo14, fibo15, fibo16, fibo17, fibo18, fibo19, fibo20, fibo21, fibo22, fibo23, fibo24, fibo25, fibo26, fibo27, fibo28, fibo29, fibo30, fibo31, fibo32, fibo33, fibo34, fibo35, fibo36, fibo37, fibo38, fibo39, fibo40, fibo41, fibo42, fibo43, fibo44, fibo45, fibo46, fibo47, fibo48, fibo49, fibo50, fibo51, fibo52, fibo53, fibo54, fibo55, fibo56, fibo57, fibo58, fibo59, fibo60, fibo61, fibo62, fibo63, fibo64, fibo65, fibo66, fibo67, fibo68, fibo69, fibo70, fibo71, fibo72, fibo73, fibo74, fibo75, fibo76, fibo77, fibo78, fibo79, fibo80, fibo81, fibo82, fibo83, fibo84, fibo85, fibo86, fibo87, fibo88, fibo89, fibo90, fibo91, fibo92, fibo93, fibo94, fibo95, fibo96, fibo97, fibo98, fibo99 
+ 
+.CODE    
+ 
+<font color=#008000>;============================CHUONG TRINH CHINH=============================== </font>
+MAIN <font color=#0000FF>PROC</font> 
+     
+<font color=#008000>;=========================PHAN KHOI TAO BAN DAU=============================== </font>
+                             
+    <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, @DATA           <font color=#008000>;LAY DIA CHI CUA VUNG NHO DATA VAO THANH GHI DOAN DS </font>
+    <font color=#0000FF>MOV</font> <font color=#800000>DS</font>, <font color=#C80000>AX</font> 
+     
+<font color=#008000>;=======================PHAN NHAP 2 SO INPUT O DAND HEX======================= </font>
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; THONG BAO NHAP SO THU NHAT </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG1 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> READ_NUM           <font color=#008000>; NHAP SO THU NHAT  </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, X 
+    <font color=#0000FF>MOV</font> NUM1, <font color=#C80000>AL</font> 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; THONG BAO NHAP SO THU HAI </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG2 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> READ_NUM           <font color=#008000>; NHAP SO THU HAI </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, X 
+    <font color=#0000FF>MOV</font> NUM2, <font color=#C80000>AL</font> 
+     
+<font color=#008000>;=====================PHAN THUC HIEN TINH TONG HAI SO========================= </font>
+     
+    <font color=#0000FF>CALL</font> SUM                <font color=#008000>; GOI HAM THUC HIEN TINH TONG: RESULT = A + B </font>
+     
+<font color=#008000>;==========================PHAN IN KET QUA PHEP CONG========================== </font>
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>;IN RA THONG BAO KET QUA ADD </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG3  
+    <font color=#0000FF>INT</font> 21h 
+     
+<font color=#008000>;======================PHAN XU LY IN RA FIRST N FIBONACCI===================== </font>
+     
+    <font color=#0000FF>CALL</font> PRINT_RESULT       <font color=#008000>; GOI HAM THUC HIEN IN KET QUA SUM VA IN SO FIBONACCI </font>
+ 
+<font color=#008000>;==============================THOAT CHUONG TRINH============================= </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 4Ch             <font color=#008000>; NGAT THOAT KHOI CHUONG TRINH </font>
+    <font color=#0000FF>INT</font> 21h 
+ 
+MAIN ENDP 
+<font color=#008000>;============================================================================= </font>
+     
+<font color=#008000>;=============================CAC CHUONG TRINH CON============================   </font>
+ 
+<font color=#008000>;====================HAM DOC INPUT DUOC NHAP TU BAN PHIM====================== </font>
+READ_NUM <font color=#0000FF>PROC</font> 
+    <font color=#0000FF>XOR</font> <font color=#C80000>AX</font>, <font color=#C80000>AX</font>              <font color=#008000>; AX = 0 </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>BL</font>, 10               
+    <font color=#0000FF>MOV</font> <font color=#C80000>BH</font>, 0               <font color=#008000>; BH CHUA SO KY TU DA NHAP </font>
+    <font color=#0000FF>MOV</font> X, 0 
+    <font color=#0000FF>MOV</font> Y, 0 
+     
+    READ: 
+    <font color=#0000FF>INC</font> <font color=#C80000>BH</font>                  <font color=#008000>; TANG BH = BH + 1 </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 1h              <font color=#008000>; NHAP SO TU BAN PHIM </font>
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, 0Dh             <font color=#008000>; NHAP XONG KHI NHAN PHIM ENTER </font>
+    <font color=#0000FF>JE</font> READ_DONE 
+     
+    <font color=#0000FF>SUB</font> <font color=#C80000>AL</font>, 30h             <font color=#008000>; CHUYEN KY TU THANH SO (VD: '9': 39h - 30h = 9) </font>
+     
+    <font color=#0000FF>MOV</font> Y, <font color=#C80000>AL</font>               <font color=#008000>; THUC HIEN NHAN SO VUA NHAP UNG VOI TRONG SO TUONG UNG </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, X               <font color=#008000>; VD TA NHAP 1, 2, 3 =&gt; NUM = 1*10^2 + 2*10^1 + 3*10^0 </font>
+    <font color=#0000FF>MUL</font> <font color=#C80000>BL</font>           
+    <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, Y       
+    <font color=#0000FF>MOV</font> X, <font color=#C80000>AL</font> 
+                            <font color=#008000>; KIEM TRA NHAP DU SO CO 2 CHU SO CHUA, NEU ROI THI HOAN THANH VIEC NHAP </font>
+    <font color=#0000FF>CMP</font> <font color=#C80000>BH</font>, 2 
+    <font color=#0000FF>JE</font> READ_DONE 
+     
+    <font color=#0000FF>JMP</font> READ 
+     
+    READ_DONE:              <font color=#008000>; NHAP XONG </font>
+     
+    <font color=#0000FF>RET</font> 
+READ_NUM ENDP 
+<font color=#008000>;============================================================================   </font>
+ 
+<font color=#008000>;==========================HAM THUC HIEN TINH TONG=========================== </font>
+SUM <font color=#0000FF>PROC</font> 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, NUM1            <font color=#008000>; TINH TONG 2 SO A, B VUA NHAP </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, NUM2 
+    <font color=#0000FF>ADD</font> <font color=#C80000>AH</font>, <font color=#C80000>AL</font> 
+     
+    <font color=#0000FF>MOV</font> RESULT, <font color=#C80000>AH</font>          <font color=#008000>; LUU KET QUA SUM = A+B VAO BIEN RESULT </font>
+         
+    <font color=#0000FF>RET</font>     
+SUM ENDP 
+<font color=#008000>;========================================================================== </font>
+ 
+<font color=#008000>;========================HAM THUC HIEN IN KET QUA==========================  </font>
+PRINT_RESULT <font color=#0000FF>PROC</font> 
+    <font color=#0000FF>XOR</font> <font color=#C80000>AX</font>, <font color=#C80000>AX</font>              <font color=#008000>; SO TINH TOAN DUOC CO THE CO 3 CHU SO NEN TA THUC HIEN CHIA 10 (DIV 10) 2 LAN </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, RESULT            
+    <font color=#0000FF>MOV</font> <font color=#C80000>CL</font>, 10                
+    <font color=#0000FF>DIV</font> <font color=#C80000>CL</font>                  <font color=#008000>; CHIA 10 LAN 1  </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>CH</font>, <font color=#C80000>AH</font>              <font color=#008000>; CH CHUA SO HANG DON VI  </font>
+     
+    <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, 0               <font color=#008000>; KIEM TRA SO HANG CHUC VA HANG TRAM CO = 0?, NEU CO THI CHI IN HANG DON VI </font>
+    <font color=#0000FF>JE</font> ZERO1 
+    <font color=#0000FF>XOR</font> <font color=#C80000>AH</font>, <font color=#C80000>AH</font>               
+    <font color=#0000FF>MOV</font> <font color=#C80000>CL</font>, 10               
+    <font color=#0000FF>DIV</font> <font color=#C80000>CL</font>                  <font color=#008000>; CHIA 10 LAN 2 </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>BL</font>, <font color=#C80000>AH</font>              <font color=#008000>; BL CHUA SO HANG CHUC </font>
+     
+    <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, 0               <font color=#008000>; AL CHUA SO HANG TRAM, NEU SO HANG TRAM = 0 THI KHONG IN </font>
+    <font color=#0000FF>JE</font> ZERO2 
+    <font color=#0000FF>ADD</font> <font color=#C80000>AL</font>, 30h             <font color=#008000>; IN HANG TRAM </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>AL</font> 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 02h 
+    <font color=#0000FF>INT</font> 21h  
+     
+    ZERO2:                  <font color=#008000>; KIEM TRA SO HANG CHUC, NEU HANG CHUC = 0 THI KHONG IN </font>
+    <font color=#0000FF>ADD</font> <font color=#C80000>BL</font>, 30h             <font color=#008000>; (HANG CHUC = 0 VA HANG TRAM = 0 THI MOI KHONG IN) </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>BL</font>              <font color=#008000>; IN HANG CHUC </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 02h 
+    <font color=#0000FF>INT</font> 21h 
+     
+    ZERO1: 
+    <font color=#0000FF>ADD</font> <font color=#C80000>CH</font>, 30h             <font color=#008000>; IN HANG DON VI </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#C80000>CH</font> 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 02h 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AL</font>, 0               <font color=#008000>; KET QUA DUOC LUU DANG 8-BIT (CO DAU NEN CO THE XAY RA TRAN SO =&gt; TRO THANH SO AM) </font>
+    <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, RESULT          <font color=#008000>; NEU TRAN SO THANH SO AM =&gt; LON HON 99 </font>
+    <font color=#0000FF>JG</font> LARGER_99 
+      
+    <font color=#0000FF>CMP</font> RESULT, 99          <font color=#008000>; NEU KHONG TRAN SO THI SO SANH VOI 99 </font>
+    <font color=#0000FF>JNG</font> NOT_LARGER_99 
+     
+    LARGER_99:              <font color=#008000>; TRAN SO THANH SO AM HOAC LON HON 99 THI CHO RESULT = 99 </font>
+    <font color=#0000FF>MOV</font> RESULT, 99 
+     
+    NOT_LARGER_99:          <font color=#008000>; NEU RESULT KHONG TRAN SO THANH AM HOAC LON HON 99 THI GIU Y NGUYEN </font>
+    <font color=#0000FF>XOR</font> <font color=#C80000>CX</font>, <font color=#C80000>CX</font> 
+    <font color=#0000FF>MOV</font> <font color=#C80000>CL</font>, RESULT          <font color=#008000>; CX CHUA SO VONG LAP (CUNG LA SO SO FIBONACCI CAN IN) </font>
+     
+    <font color=#0000FF>CMP</font> <font color=#C80000>CX</font>, 0               <font color=#008000>; NEU CX = 0 TUC KHONG IN BAT CU SO NAO </font>
+    <font color=#0000FF>JE</font> DONE_PRINT 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; HIEN THI THONG BAO IN SO FIBONACCI </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG4 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, 10              <font color=#008000>; THUC HIEN XUONG DONG VA DUA CON TRO VE DAU DONG </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 02h 
+    <font color=#0000FF>INT</font> 21h 
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, 13 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 02h 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>LEA</font> <font color=#C80000>BX</font>, FIBO 
+    PRINT_LOOP:             <font color=#008000>; VONG LAP IN RA FIBONACCI  </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, <font color=#0064C8>[</font><font color=#C80000>BX</font><font color=#0064C8>]</font> 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>ADD</font> <font color=#C80000>BX</font>, 2 
+     
+    <font color=#0000FF>LOOP</font> PRINT_LOOP 
+     
+    DONE_PRINT:             <font color=#008000>; IN XONG </font>
+ 
+    <font color=#0000FF>RET</font> 
+PRINT_RESULT ENDP 
+<font color=#008000>;========================================================================== </font>
+ 
+<font color=#000064>END</font> 
+</font></pre>
+<center> <font color=#FFFFFF>;</font> <a href="http://www.emu8086.com" target="_blank"><font face=verdana size=1 color=#000000> - asm2html - </font></a> </center>
+<!-- emu8086 version 4.08    -->
+<!-- STOP AUTOMATIC ASM TO HTML EXPORT -->
+
+
+
+
+ 
+ 
+<!-- *** -->
+ 
+ 
+</body>
+</html>
