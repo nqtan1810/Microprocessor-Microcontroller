@@ -1,0 +1,39 @@
+$NOMOD51
+$INCLUDE (8051.MCU)
+
+      ; Reset Vector
+      ORG   0000H
+      JMP   START
+
+      ORG   0100H
+START:
+      MOV TMOD, #10H
+      MOV TL1, #78H
+      MOV TH1, #0ECH
+      SETB TR1
+      MOV R0, #9
+      
+LOOP:	
+   
+      CALL DISPLAY
+      
+JMP LOOP
+      
+DISPLAY:
+      MOV A, #01H
+  HT1:
+      MOV P3, A
+      MOV P2, R0
+      CALL Delay_5ms
+      RR A
+      CJNE A, #01H, HT1
+      RET
+RET
+       
+DELAY_5MS:
+      MOV TL1, #78H
+      MOV TH1, #0ECH
+      SETB TR1
+      JNB TF1, $
+RET
+      END
