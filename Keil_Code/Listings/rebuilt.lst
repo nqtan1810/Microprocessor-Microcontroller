@@ -1,0 +1,237 @@
+C51 COMPILER V9.60.7.0   REBUILT                                                           03/25/2023 11:51:13 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE REBUILT
+OBJECT MODULE PLACED IN .\Objects\rebuilt.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE rebuilt.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\r
+                    -ebuilt.lst) TABS(2) OBJECT(.\Objects\rebuilt.obj)
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <regx52.h>
+   3          
+   4          void init();
+   5          void command(unsigned int);
+   6          void write_data(unsigned char);
+   7          void ms_delay(unsigned int);
+   8          char get_key(int, int, int, int, char, char, char, char);
+   9          void num_generator(char, int*);
+  10          void write_result(int, char);
+  11          
+  12          sbit EN = P3^2;   // Enable LCD to display data: HIGH -> LOW
+  13          sbit RW = P3^3;   // WRITE = 0; READ = 1
+  14          sbit RS = P3^4;   // Register Select: RS = 0 -> Command mode, RS = 1 -> Data mode
+  15          
+  16          void main(){
+  17   1        
+  18   1        int i, j;
+  19   1        int *operand;
+  20   1        int operand1 = 0;
+  21   1        int operand2 = 0;
+  22   1        int result = 0;
+  23   1        int en_arr[4][4] = {{0,1,1,1},
+  24   1                    {1,0,1,1},
+  25   1                    {1,1,0,1},
+  26   1                    {1,1,1,0}};
+  27   1        
+  28   1        char c_arr[4][4] = {{'7','4','1','o'},
+  29   1                  {'8','5','2','0'},
+  30   1                  {'9','6','3','='},
+  31   1                  {'/','*','-','+'}};
+  32   1        
+  33   1        char error[10] = {'M','A','T','H',' ','E','R','R','O','R'};
+  34   1        char pressed_key, operator1, negative = 'N';
+  35   1        
+  36   1        P1 = 0xFF;
+  37   1        operand = &operand1;
+  38   1        
+  39   1        while(1){
+  40   2          
+  41   2          for(i = 0; i < 4; i++){
+  42   3            
+  43   3            pressed_key = get_key(en_arr[i][0], en_arr[i][1], en_arr[i][2], en_arr[i][3], c_arr[i][0], c_arr[i][1],
+             - c_arr[i][2], c_arr[i][3]);
+  44   3            
+  45   3            if(pressed_key=='/' || pressed_key=='*' || pressed_key=='-' || pressed_key=='+'){
+  46   4              operand = &operand2;
+  47   4              operator1 = pressed_key;
+  48   4            }
+  49   3            
+  50   3            if((pressed_key != 'Z') && (pressed_key != '=') && (pressed_key != '/') && (pressed_key != '*') && (pre
+             -ssed_key != '-') && (pressed_key != '+')){
+  51   4              num_generator(pressed_key, operand);
+  52   4            }
+C51 COMPILER V9.60.7.0   REBUILT                                                           03/25/2023 11:51:13 PAGE 2   
+
+  53   3            
+  54   3            if(pressed_key == '='){
+  55   4              if(operator1 == '*')
+  56   4                result = operand1 * operand2;
+  57   4                
+  58   4              if(operator1 == '/'){
+  59   5                if(operand2 == 0){
+  60   6                  command(0xC0);
+  61   6                  for(j = 0; j < 10; j++)
+  62   6                    write_data(error[j]);
+  63   6                  ms_delay(500);
+  64   6                  init();
+  65   6                } else
+  66   5                  result = operand1 / operand2;
+  67   5                
+  68   5                if(operator1 == '-'){
+  69   6                  if(operand1 < operand2){
+  70   7                    negative = 'Y';
+  71   7                    result = operand2 - operand1;
+  72   7                  } else
+  73   6                    result = operand1 - operand2;
+  74   6                }
+  75   5                
+  76   5                if(operator1 == '+')
+  77   5                  result = operand1 + operand2;
+  78   5                
+  79   5                write_result(result, negative);
+  80   5                
+  81   5              }
+  82   4            }
+  83   3            
+  84   3          }
+  85   2        }
+  86   1        
+  87   1      }
+  88          
+  89          void init(){
+  90   1        
+  91   1        ms_delay(50);
+  92   1        command(0x38);
+  93   1        
+  94   1        command(0x1C);
+  95   1        
+  96   1        command(0x0E);
+  97   1        
+  98   1        command(0x06);
+  99   1        
+ 100   1        command(0x01);
+ 101   1        
+ 102   1        ms_delay(50);
+ 103   1        command(0x00);
+ 104   1        
+ 105   1        main();
+ 106   1        
+ 107   1      }
+ 108          
+ 109          void command(unsigned int comm){
+ 110   1        
+ 111   1        RW = 0;
+ 112   1        RS = 0;
+ 113   1        P2 = comm;
+ 114   1        EN = 1;
+C51 COMPILER V9.60.7.0   REBUILT                                                           03/25/2023 11:51:13 PAGE 3   
+
+ 115   1        ms_delay(50);
+ 116   1        EN = 0;
+ 117   1        
+ 118   1      }
+ 119          
+ 120          void write_data(unsigned char c){
+ 121   1        
+ 122   1        RW = 0;
+ 123   1        RS = 1;
+ 124   1        P2 = c;
+ 125   1        EN = 1;
+ 126   1        ms_delay(50);
+ 127   1        EN = 0;
+ 128   1        
+ 129   1      }
+ 130          
+ 131          void ms_delay(unsigned int time){
+ 132   1        
+ 133   1        TMOD = 0x10;
+ 134   1        TL1 = 0x18;
+ 135   1        TH1 = 0xFC;
+ 136   1        TR1 = 1;
+ 137   1        
+ 138   1        while(time--){
+ 139   2          while(TF1 == 0);
+ 140   2          TF1 = 0;
+ 141   2          TL1 = 0x18;
+ 142   2          TH1 = 0xFC;
+ 143   2        }
+ 144   1        
+ 145   1        TR1 = 0;
+ 146   1      }
+ 147          
+ 148          char get_key(int c1, int c2, int c3, int c4, char r1, char r2, char r3, char r4){
+ 149   1        
+ 150   1        char c = 'Z';
+ 151   1        P1_0 = c1;
+ 152   1        P1_1 = c2;
+ 153   1        P1_2 = c3;
+ 154   1        P1_3 = c4;
+ 155   1        
+ 156   1        if(P1_4 == 0)
+ 157   1          c = r1;
+ 158   1          
+ 159   1        if(P1_5 == 0)
+ 160   1          c = r2;
+ 161   1          
+ 162   1        if(P1_6 == 0)
+ 163   1          c = r3;
+ 164   1          
+ 165   1        if(P1_7 == 0)
+ 166   1          if(r4 == 'O')
+ 167   1            init();
+ 168   1          else
+ 169   1            c = r4;
+ 170   1        
+ 171   1        if(c != 'Z'){
+ 172   2          write_data(c);
+ 173   2          ms_delay(100);
+ 174   2        }
+ 175   1        
+ 176   1        return c;
+C51 COMPILER V9.60.7.0   REBUILT                                                           03/25/2023 11:51:13 PAGE 4   
+
+ 177   1      }
+ 178          
+ 179          void num_generator(char c, int* operand){
+ 180   1        
+ 181   1        int digit = 0;
+ 182   1        digit = c - '0';
+ 183   1        *operand = digit + (*operand * 10);
+ 184   1          
+ 185   1      }
+ 186          
+ 187          void write_result(int result, char neg){
+ 188   1        
+ 189   1        int i = 0, j = 0, tmp = 0;
+ 190   1        char rev_num[20];
+ 191   1        command(0xC0);
+ 192   1        
+ 193   1        if(neg == 'Y')
+ 194   1          write_data('-');
+ 195   1          
+ 196   1        do{
+ 197   2          tmp = result % 10;
+ 198   2          result /= 10;
+ 199   2          rev_num[i++] = tmp + '0';
+ 200   2        } while(result > 0);
+ 201   1        
+ 202   1        for(j = i-1; j >= 0; j--)
+ 203   1          write_data(rev_num[j]);
+ 204   1          
+ 205   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    905    ----
+   CONSTANT SIZE    =     58    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     118
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
