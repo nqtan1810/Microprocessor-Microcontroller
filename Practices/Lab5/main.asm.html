@@ -1,0 +1,376 @@
+<html>
+<head>
+       <title>source code: main.asm</title>
+       <meta name="description" content="source code">
+       <style>
+           a:link {text-decoration: none}
+           a:visited {text-decoration: none}
+           a:hover {text-decoration: none; color:#ff0000}
+       </style>
+</head>
+<body leftmargin=110  rightmargin=110 topmargin=20 bgcolor=#FFFFFF text=#000000 link=blue vlink=blue alink=blue>
+ 
+ 
+<!-- * -->
+ 
+ 
+
+
+
+
+&nbsp; &nbsp;<center> <font color=#FFFFFF> ;</font> <font size=2 face="Terminal"> main.asm </font></center>
+
+
+
+
+
+
+<!-- START AUTOMATIC ASM TO HTML EXPORT -->
+<pre><font size=2 face="Terminal">
+.MODEL SMALL 
+.STACK 100h 
+.DATA 
+ 
+<font color=#008000>;=======================PHAN KHAI BAO CAC CHUOI=============================== </font>
+ 
+    MSG1 <font color=#000064>DB</font> 10,13, <font color=#800080>"NHAP SO THU NHAT: $"</font> 
+    MSG2 <font color=#000064>DB</font> 10,13, <font color=#800080>"NHAP SO THU HAI: $"</font> 
+    MSG3 <font color=#000064>DB</font> 10,13, <font color=#800080>"TONG HAI SO LA: $"</font> 
+    MSG4 <font color=#000064>DB</font> 10,13, <font color=#800080>"HIEU HAI SO LA: $"</font> 
+    MSG5 <font color=#000064>DB</font> 10,13, <font color=#800080>"OVERLOAD FLAG: $"</font> 
+    MSG6 <font color=#000064>DB</font> <font color=#800080>"h$"</font>            <font color=#008000>; IN RA KI HIEU 'h' SAU CUNG KET QUA DANG HEX </font>
+     
+ 
+<font color=#008000>;========================PHAN KHAI BAO CAC BIEN===============================  </font>
+    
+    NUM1 <font color=#000064>DD</font> ?, <font color=#800080>'$'</font>          <font color=#008000>; LUU SO THU NHAT </font>
+    NUM2 <font color=#000064>DD</font> ?, <font color=#800080>'$'</font>          <font color=#008000>; LUU SO THU HAI </font>
+    RESULT <font color=#000064>DD</font> ?, <font color=#800080>'$'</font>        <font color=#008000>; LUU KET QUA SUM/SUBTRACT  </font>
+    OVFL_FLAG <font color=#000064>DB</font> ?, <font color=#800080>'$'</font>          <font color=#008000>; LUU BIT OVERFLOW </font>
+     
+    NUM_HIGH <font color=#000064>DW</font> ?, <font color=#800080>'$'</font>      <font color=#008000>; LUU 16 BIT CAO </font>
+    NUM_LOW <font color=#000064>DW</font> ?, <font color=#800080>'$'</font>       <font color=#008000>; LUU 16 BIT THAP </font>
+     
+    A <font color=#000064>DD</font> ?, <font color=#800080>'$'</font>             <font color=#008000>; CAC BIEN TAM 32 BIT </font>
+    B <font color=#000064>DD</font> ?, <font color=#800080>'$'</font> 
+     
+ 
+.CODE    
+ 
+<font color=#008000>;============================CHUONG TRINH CHINH=============================== </font>
+MAIN <font color=#0000FF>PROC</font> 
+     
+<font color=#008000>;=========================PHAN KHOI TAO BAN DAU=============================== </font>
+     
+    <font color=#008000>;LAY DIA CHI CUA VUNG NHO DATA VAO THANH GHI DOAN DS </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, @DATA 
+    <font color=#0000FF>MOV</font> <font color=#800000>DS</font>, <font color=#C80000>AX</font> 
+     
+     
+<font color=#008000>;=======================PHAN NHAP 2 SO INPUT O DAND HEX======================= </font>
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; THONG BAO NHAP SO THU NHAT </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG1 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> READ_NUM           <font color=#008000>; NHAP SO THU NHAT </font>
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, NUM_HIGH         
+    <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, NUM_LOW          
+     
+    <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>NUM1<font color=#0064C8>]</font>, <font color=#C80000>AX</font>          <font color=#008000>; LUU SO THU NHAT VAO BIEN NUM1 </font>
+    <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>NUM1<font color=#0064C8>+</font>2<font color=#0064C8>]</font>, <font color=#C80000>DX</font>        <font color=#008000>; 16 BIT THAP VAO [NUM1], 16 BIT CAO VAO [NUM1+2] </font>
+     
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; THONG BAO NHAP SO THU HAI </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG2 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> READ_NUM           <font color=#008000>; NHAP SO THU HAI </font>
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, NUM_HIGH 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, NUM_LOW 
+     
+    <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>NUM2<font color=#0064C8>]</font>, <font color=#C80000>AX</font>          <font color=#008000>; LUU SO THU NHAT VAO BIEN NUM2 </font>
+    <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>NUM2<font color=#0064C8>+</font>2<font color=#0064C8>]</font>, <font color=#C80000>DX</font>        <font color=#008000>; 16 BIT THAP VAO [NUM2], 16 BIT CAO VAO [NUM2+2] </font>
+     
+     
+<font color=#008000>;=====================PHAN THUC HIEN TINH TONG HAI SO========================= </font>
+     
+    <font color=#0000FF>CALL</font> SUM                <font color=#008000>; GOI HAM THUC HIEN TINH TONG </font>
+ 
+ 
+<font color=#008000>;==========================PHAN IN KET QUA PHEP CONG========================== </font>
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>;IN RA THONG BAO KET QUA ADD </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG3  
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> PRINT_RESULT       <font color=#008000>; GOI HAM IN RA KET QUA SUM </font>
+     
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; IN RA THONG BAO OVERFLOW </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG5  
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>     <font color=#008000>; IN RA GIA TRI CO BAO TRAN PHEP CONG </font>
+    <font color=#0000FF>ADD</font> <font color=#C80000>DL</font>, 30h 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+    <font color=#0000FF>INT</font> 21h 
+ 
+ 
+<font color=#008000>;=====================PHAN THUC HIEN TINH HIEU HAI SO========================= </font>
+     
+    <font color=#0000FF>CALL</font> SUBTRACT           <font color=#008000>; GOI HAM THUC HIEN TINH HIEU </font>
+     
+     
+<font color=#008000>;==========================PHAN IN KET QUA PHEP TRU=========================== </font>
+ 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; IN RA THONG BAO KET QUA SUB </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG4  
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>CALL</font> PRINT_RESULT       <font color=#008000>; GOI HAM IN RA KET QUA SUB </font>
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; IN RA THONG BAO OVERFLOW </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG5  
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>DL</font>, <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>     <font color=#008000>; IN RA GIA TRI CO BAO TRAN PHEP TRU </font>
+    <font color=#0000FF>ADD</font> <font color=#C80000>DL</font>, 30h 
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+    <font color=#0000FF>INT</font> 21h  
+        
+     
+<font color=#008000>;==============================THOAT CHUONG TRINH============================= </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 4Ch             <font color=#008000>; NGAT THOAT KHOI CHUONG TRINH </font>
+    <font color=#0000FF>INT</font> 21h 
+ 
+MAIN ENDP 
+<font color=#008000>;============================================================================= </font>
+     
+<font color=#008000>;=============================CAC CHUONG TRINH CON============================   </font>
+ 
+<font color=#008000>;====================HAM DOC INPUT DUOC NHAP TU BAN PHIM====================== </font>
+READ_NUM <font color=#0000FF>PROC</font>  
+    <font color=#0000FF>MOV</font> A, 0 
+    <font color=#0000FF>MOV</font> B, 0 
+    <font color=#0000FF>XOR</font> <font color=#C80000>DX</font>, <font color=#C80000>DX</font>              <font color=#008000>; RESET DX = 0 </font>
+    <font color=#0000FF>XOR</font> <font color=#C80000>AX</font>, <font color=#C80000>AX</font>              <font color=#008000>; RESET AX = 0 </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, 16              <font color=#008000>; BX = 16 (HE HEX NEN CO SO NHAN TICH LUY KHI CHUYEN DOI SANG DEC LA 16) </font>
+     
+    READ_KEY_PRESSED:       <font color=#008000>; DOC KY TU NHAP TU BAN PHIM </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 1h          <font color=#008000>; READ KY TU TU BAN PHIM, KY TU DUOC LUU TRONG AL </font>
+        <font color=#0000FF>INT</font> 21h  
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, 0Dh         <font color=#008000>; NEU AL = 0Dh (MA ASCII CUA PHIM ENTER) =&gt; BAM PHIM ENTER </font>
+        <font color=#0000FF>JE</font> READ_DONE        <font color=#008000>; NEU BAM PHIM ENTER THI HOAN THANH VIEC NHAP SO </font>
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>AL</font>, 41h         <font color=#008000>; SO SANH VOI KY TU A (MA ASCII CUA 'A' = 41h) DE PHAN LOAI CHU HAY SO </font>
+        <font color=#0000FF>JL</font> NUMBER           <font color=#008000>; CHUYEN VE GIA TRI TUONG UNG VOI SO </font>
+        <font color=#0000FF>JMP</font> CHARACTER       <font color=#008000>; CHUYEN VE GIA TRI TUONG UNG VOI CHU </font>
+         
+    NUMBER:                 <font color=#008000>; SO DUOC BAM - MA ASCII CUA '0' THI SE RA GIA TRI TUONG UNG </font>
+        <font color=#0000FF>SUB</font> <font color=#C80000>AL</font>, 30h         <font color=#008000>; VD: '9' - '0' = 9 </font>
+        <font color=#0000FF>JMP</font> CONVERT_NUM     <font color=#008000>; NHAY DEN HAM CHUYEN HEX SANG DECIMAL </font>
+         
+    CHARACTER:              <font color=#008000>; CHU DUOC BAM - 37h THI SE RA GIA TRI TUONG UNG </font>
+        <font color=#0000FF>SUB</font> <font color=#C80000>AL</font>, 37h         <font color=#008000>; VD: 'A' - 37h = 65 - 55 = 10 </font>
+     
+    CONVERT_NUM:            <font color=#008000>; THUC HIEN NHAN CAC GIA TRI VUA NHAP VOI BAC TUONG UNG </font>
+        <font color=#0000FF>XOR</font> <font color=#C80000>AH</font>, <font color=#C80000>AH</font>          <font color=#008000>; VD: TA NHAP 3 GIA TRI: A, 9, 3 =&gt; SO HEX = A*16^2 + 9*16^1 + 3*16^0 </font>
+        <font color=#0000FF>CMP</font> <font color=#C80000>DX</font>, 0 
+        <font color=#0000FF>JNE</font> OVERFLOW        <font color=#008000>; KIEM TRA TRAN THANH GHI NEU TA NHAP QUA 16 BIT, NEU CO NHAY TOI XU LI TRAN </font>
+         
+        <font color=#0000FF>MOV</font> B, <font color=#C80000>AX</font>           <font color=#008000>; CHUYEN DOI NHU VD NAY: A, 9, 3 =&gt; SO HEX = A*16^2 + 9*16^1 + 3*16^0  </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, A 
+        <font color=#0000FF>MUL</font> <font color=#C80000>BX</font> 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AX</font>, B 
+        <font color=#0000FF>MOV</font> A, <font color=#C80000>AX</font> 
+         
+        <font color=#0000FF>MOV</font> NUM_HIGH, <font color=#C80000>DX</font>    <font color=#008000>; LUU 16 BIT CAO </font>
+        <font color=#0000FF>MOV</font> NUM_LOW, <font color=#C80000>AX</font>     <font color=#008000>; LUU 16 BIT THAP </font>
+         
+        <font color=#0000FF>JMP</font> READ_KEY_PRESSED  
+     
+    OVERFLOW:               <font color=#008000>; XU LY TRAN </font>
+        <font color=#0000FF>MOV</font> A, <font color=#C80000>AX</font>     
+        <font color=#0000FF>MOV</font> <font color=#C80000>CX</font>, 4           <font color=#008000>; SO LAN VONG LAP LOOP </font>
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, NUM_HIGH 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, NUM_LOW  
+         
+    SHIFT: 
+        <font color=#0000FF>SHL</font> <font color=#C80000>AX</font>, 1           <font color=#008000>; DICH TRAI 1 BIT, HE HEX NEN DICH 4 LAN </font>
+        <font color=#0000FF>RCL</font> <font color=#C80000>DX</font>, 1           <font color=#008000>; OFF-BIT CUA PHEP DICH TRAI DUOC DUA VAO DX </font>
+        <font color=#0000FF>LOOP</font> SHIFT 
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AX</font>, A 
+        <font color=#0000FF>MOV</font> NUM_HIGH, <font color=#C80000>DX</font>    <font color=#008000>; LUU 16 BIT CAO </font>
+        <font color=#0000FF>MOV</font> NUM_LOW, <font color=#C80000>AX</font>     <font color=#008000>; LUU 16 BIT THAP </font>
+         
+        <font color=#0000FF>JMP</font> READ_KEY_PRESSED 
+         
+    READ_DONE:              <font color=#008000>; HOAN THANH VIEC DOC 1 SO TU BAN PHIM O DANG HEX </font>
+        <font color=#0000FF>RET</font> 
+     
+READ_NUM ENDP 
+<font color=#008000>;============================================================================ </font>
+ 
+<font color=#008000>;==========================HAM THUC HIEN TINH TONG=========================== </font>
+SUM <font color=#0000FF>PROC</font> 
+        <font color=#0000FF>CLC</font>                 <font color=#008000>; XOA BIT CF TU CAC LENH TRUOC </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, <font color=#0064C8>[</font>NUM1<font color=#0064C8>]</font>      <font color=#008000>; AX CHUA 16 BIT THAP CUA NUM1 </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#0064C8>[</font>NUM1<font color=#0064C8>+</font>2<font color=#0064C8>]</font>    <font color=#008000>; BX CHUA 16 BIT CAO CUA NUM1 </font>
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>CX</font>, <font color=#0064C8>[</font>NUM2<font color=#0064C8>]</font>      <font color=#008000>; CX CHUA 16 BIT THAP CUA NUM2 </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, <font color=#0064C8>[</font>NUM2<font color=#0064C8>+</font>2<font color=#0064C8>]</font>    <font color=#008000>; DX CHUA 16 BIT THAP CUA NUM2 </font>
+         
+        <font color=#0000FF>ADD</font> <font color=#C80000>AX</font>, <font color=#C80000>CX</font>          <font color=#008000>; CONG 16 BIT THAP CUA 2 SO VOI NHAU, AX = AX + CX </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>RESULT<font color=#0064C8>]</font>, <font color=#C80000>AX</font>    <font color=#008000>; LUU 16 BIT THAP CUA KET QUA </font>
+         
+        <font color=#0000FF>ADC</font> <font color=#C80000>BX</font>, <font color=#C80000>DX</font>          <font color=#008000>; CONG 16 BIT CAO CUNG VOI BIT CARRY FLAG, BX = BX + DX + CF </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>RESULT<font color=#0064C8>+</font>2<font color=#0064C8>]</font>, <font color=#C80000>BX</font>  <font color=#008000>; LUU 16 BIT CAO CUA KET QUA </font>
+         
+        <font color=#0000FF>JO</font> SET_FLAG_SUM     <font color=#008000>; XU LY TRAN SO PHEP CONG </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>, 0  <font color=#008000>; OVFL_FLAG = 0 NEU KHONG TRAN </font>
+        <font color=#0000FF>JMP</font> SUM_DONE  
+     
+     SET_FLAG_SUM: 
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>, 1  <font color=#008000>; OVFL_FLAG = 1 NEU TRAN </font>
+      
+     SUM_DONE:              <font color=#008000>; HOAN THANH VIEC CONG </font>
+         
+     <font color=#0000FF>RET</font>     
+     
+SUM ENDP 
+<font color=#008000>;========================================================================== </font>
+ 
+<font color=#008000>;========================HAM THUC HIEN TINH HIEU=========================== </font>
+SUBTRACT <font color=#0000FF>PROC</font> 
+        <font color=#0000FF>CLC</font>                 <font color=#008000>; XOA BIT CF TU CAC LENH TRUOC </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, <font color=#0064C8>[</font>NUM1<font color=#0064C8>]</font>      <font color=#008000>; AX CHUA 16 BIT THAP CUA NUM1 </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#0064C8>[</font>NUM1<font color=#0064C8>+</font>2<font color=#0064C8>]</font>    <font color=#008000>; BX CHUA 16 BIT CAO CUA NUM1 </font>
+         
+        <font color=#0000FF>MOV</font> <font color=#C80000>CX</font>, <font color=#0064C8>[</font>NUM2<font color=#0064C8>]</font>      <font color=#008000>; CX CHUA 16 BIT THAP CUA NUM2 </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>DX</font>, <font color=#0064C8>[</font>NUM2<font color=#0064C8>+</font>2<font color=#0064C8>]</font>    <font color=#008000>; DX CHUA 16 BIT THAP CUA NUM2 </font>
+         
+        <font color=#0000FF>SUB</font> <font color=#C80000>AX</font>, <font color=#C80000>CX</font>          <font color=#008000>; TRU 16 BIT THAP CUA 2 SO VOI NHAU, AX = AX - CX </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>RESULT<font color=#0064C8>]</font>, <font color=#C80000>AX</font>    <font color=#008000>; LUU 16 BIT THAP CUA KET QUA </font>
+         
+        <font color=#0000FF>SBB</font> <font color=#C80000>BX</font>, <font color=#C80000>DX</font>          <font color=#008000>; TRU 16 BIT CAO CUNG VOI BIT CARRY FLAG, BX = BX - DX - CF </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>RESULT<font color=#0064C8>+</font>2<font color=#0064C8>]</font>, <font color=#C80000>BX</font>  <font color=#008000>; LUU 16 BIT CAO CUA KET QUA </font>
+         
+        <font color=#0000FF>JO</font> SET_FLAG_SUB     <font color=#008000>; XU LY TRAN SO PHEP TRU </font>
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>, 0  <font color=#008000>; OVFL_FLAG = 0 NEU KHONG TRAN </font>
+        <font color=#0000FF>JMP</font> SUB_DONE  
+     
+     SET_FLAG_SUB: 
+        <font color=#0000FF>MOV</font> <font color=#0064C8>[</font>OVFL_FLAG<font color=#0064C8>]</font>, 1  <font color=#008000>; OVFL_FLAG = 1 NEU TRAN </font>
+      
+     SUB_DONE:              <font color=#008000>; HOAN THANH VIEC TRU </font>
+     
+    <font color=#0000FF>RET</font> 
+ 
+SUBTRACT ENDP 
+<font color=#008000>;========================================================================== </font>
+ 
+<font color=#008000>;========================HAM THUC HIEN IN KET QUA==========================  </font>
+PRINT_RESULT <font color=#0000FF>PROC</font>            
+                            <font color=#008000>; THUC HIEN IN 16 BIT CAO CUA KET QUA </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#0064C8>[</font>RESULT<font color=#0064C8>+</font>2<font color=#0064C8>]</font>      <font color=#008000>; BX CHUA 16 BIT CAO CUA KET QUA </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>CX</font>, 4                
+                             
+    PRINT_HIGH:             <font color=#008000>; CHIA 16 BIT THANH 4 PHAN, MOI PHAN UNG VOI 1 SO TRONG HE HEX </font>
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, 4           <font color=#008000>; 16 BIT NEN TA CAN 4X4 VONG LAP ( = CX * AX ) </font>
+        <font color=#0000FF>XOR</font> <font color=#C80000>DX</font>, <font color=#C80000>DX</font>          <font color=#008000>; RESET DX = 0 </font>
+         
+    SHIFT_HIGH:             <font color=#008000>; DICH BIT </font>
+        <font color=#0000FF>SHL</font> <font color=#C80000>BX</font>, 1           <font color=#008000>; DICH TRAI 1 BIT </font>
+        <font color=#0000FF>RCL</font> <font color=#C80000>DX</font>, 1           <font color=#008000>; OFF-BIT CUA LENH DICH DUOC DUA VAO DX VOI TRONG SO TUONG UNG </font>
+         
+        <font color=#0000FF>DEC</font> <font color=#C80000>AX</font>              <font color=#008000>; GIAM AX 1 DON VI (AX = AX - 1) </font>
+        <font color=#0000FF>CMP</font> <font color=#C80000>AX</font>, 0           <font color=#008000>; KIEM TRA XEM CO LAP DU 4 LAN TRONG VONG LAP BE </font>
+        <font color=#0000FF>JNE</font> SHIFT_HIGH      <font color=#008000>; VONG LAP BE AX = 4 </font>
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>DX</font>, 0Ah         <font color=#008000>; SO SANH GIA TRI VOI 0Ah UNG VOI 'A' </font>
+        <font color=#0000FF>JGE</font> PRINT_CHAR_HIGH  
+         
+    PRINT_NUM_HIGH:         <font color=#008000>; IN SO: '0' -&gt; '9' </font>
+        <font color=#0000FF>ADD</font> <font color=#C80000>DX</font>, 30h 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+        <font color=#0000FF>INT</font> 21h 
+        <font color=#0000FF>JMP</font> PRINT_ONE_HIGH_DONE 
+     
+    PRINT_CHAR_HIGH:        <font color=#008000>; IN CHU: 'A', 'B', 'C', 'D', 'E', 'F' </font>
+        <font color=#0000FF>ADD</font> <font color=#C80000>DX</font>, 37h 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+        <font color=#0000FF>INT</font> 21h 
+         
+    PRINT_ONE_HIGH_DONE: 
+         
+        <font color=#0000FF>LOOP</font> PRINT_HIGH     <font color=#008000>; VONG LAP LON CX = 4  </font>
+         
+                             
+                            <font color=#008000>; THUC HIEN IN 16 BIT THAP CUA KET QUA </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>BX</font>, <font color=#0064C8>[</font>RESULT<font color=#0064C8>]</font>        <font color=#008000>; THUC HIEN TUONG TU NHU 16 BIT CAO .... </font>
+    <font color=#0000FF>MOV</font> <font color=#C80000>CX</font>, 4 
+     
+    PRINT_LOW: 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AX</font>, 4 
+        <font color=#0000FF>XOR</font> <font color=#C80000>DX</font>, <font color=#C80000>DX</font> 
+         
+    SHIFT_LOW:     
+        <font color=#0000FF>SHL</font> <font color=#C80000>BX</font>, 1 
+        <font color=#0000FF>RCL</font> <font color=#C80000>DX</font>, 1 
+         
+        <font color=#0000FF>DEC</font> <font color=#C80000>AX</font> 
+        <font color=#0000FF>CMP</font> <font color=#C80000>AX</font>, 0 
+        <font color=#0000FF>JNE</font> SHIFT_LOW 
+         
+        <font color=#0000FF>CMP</font> <font color=#C80000>DX</font>, 0Ah 
+        <font color=#0000FF>JGE</font> PRINT_CHAR_LOW 
+         
+    PRINT_NUM_LOW: 
+        <font color=#0000FF>ADD</font> <font color=#C80000>DX</font>, 30h 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+        <font color=#0000FF>INT</font> 21h 
+        <font color=#0000FF>JMP</font> PRINT_ONE_LOW_DONE 
+     
+    PRINT_CHAR_LOW: 
+        <font color=#0000FF>ADD</font> <font color=#C80000>DX</font>, 37h 
+        <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 2h 
+        <font color=#0000FF>INT</font> 21h 
+         
+    PRINT_ONE_LOW_DONE: 
+         
+        <font color=#0000FF>LOOP</font> PRINT_LOW 
+ 
+     
+    <font color=#0000FF>MOV</font> <font color=#C80000>AH</font>, 9h              <font color=#008000>; IN RA KI HIEU h (HEX) </font>
+    <font color=#0000FF>LEA</font> <font color=#C80000>DX</font>, MSG6 
+    <font color=#0000FF>INT</font> 21h 
+     
+    <font color=#0000FF>RET</font>                     <font color=#008000>; HOAN THANH VIEC IN SO 32 BIT DANG HEX (VD KET QUA IN: 1234ABCDh) </font>
+     
+PRINT_RESULT ENDP 
+<font color=#008000>;========================================================================== </font>
+    
+<font color=#000064>END</font> 
+ 
+</font></pre>
+<center> <font color=#FFFFFF>;</font> <a href="http://www.emu8086.com" target="_blank"><font face=verdana size=1 color=#000000> - asm2html - </font></a> </center>
+<!-- emu8086 version 4.08    -->
+<!-- STOP AUTOMATIC ASM TO HTML EXPORT -->
+
+
+
+
+ 
+ 
+<!-- *** -->
+ 
+ 
+</body>
+</html>
